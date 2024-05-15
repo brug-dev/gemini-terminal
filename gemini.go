@@ -27,7 +27,24 @@ func newGeminiClient(ctx context.Context, chatID int, conf GeminiChatConfig) (*G
 		return nil, err
 	}
 	model := client.GenerativeModel(conf.ModelName)
-	model.SafetySettings = conf.SafetySetting
+	model.SafetySettings = []*genai.SafetySetting{
+		{
+			Category: genai.HarmCategoryHarassment,
+			Threshold: genai.HarmBlockNone,
+		},
+		{
+			Category: genai.HarmCategoryHateSpeech,
+			Threshold: genai.HarmBlockNone,
+		},
+		{
+			Category: genai.HarmCategorySexuallyExplicit,
+			Threshold: genai.HarmBlockNone,
+		},
+		{
+			Category: genai.HarmCategoryDangerousContent,
+			Threshold: genai.HarmBlockNone,
+		},
+	}
 	return &GeminiClient{
 		chatID: chatID,
 		client: client,
